@@ -35,29 +35,64 @@ from discord.utils import get
 # Find a workbook by name and open the first sheet
 # Make sure you use the right name here.
 
+COMMAND_STAFF = ["Command Staff 💠", "Jr Command Staff 🔷"]
+TESTER = ["Tester"]
+CAPTAINS = ["Captains/Leaders 🔱"]
+
+
+scope = ['https://spreadsheets.google.com/feeds',
+        'https://www.googleapis.com/auth/drive']
+
+SHEET_CONTACT = "1DRoHl-tfHUAGSY1lIh1Vk8BfphkfeJFjWPWkGSqZol4"
 
 class Mycog(commands.Cog):
     """My custom cog"""
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    @commands.has_any_role("BossMan")
-    async def test(self, ctx):
-        await ctx.send('Has Role')
+    def credentials(self):
+        file_path = bundled_data_path(self) / 'client_secret.json'
+        creds = ServiceAccountCredentials.from_json_keyfile_name(file_path, scope)
+        client = gspread.authorize(creds)
+        return client
+    
+    def rowsearch(self, query, worksheet):
+        #Searches for a cell and returns the row number
+        client = self.credentials()
+        sheet = client.open_by_key(worksheet).sheet1
+        try:
+            cell = sheet.find(query)
+            row = cell.row
+            return row
+        except gspread.exceptions.CellNotFound:
+            return None
+
+    def colsearch(self, query, worksheet):
+        #Searches for a cell and returns the col number
+        client = self.credentials()
+        sheet = client.open_by_key(worksheet).sheet1
+        try:
+            cell = sheet.find(query)
+            col = cell.col
+            return col            
+        except gspread.exceptions.CellNotFound:
+            return None
 
     @commands.command()
-    @commands.has_any_role("BossMan")
+    async def test(self, ctx, name):
+        rowrow = self.rowsearch(name, SHEET_CONTACT)
+        colcol = self.colsearch(name, SHEET_CONTACT)
+        await ctx.send('Row: ' + str(rowrow))
+        await ctx.send('Col: ' + str(colcol))
+
+    @commands.command()
+    @commands.has_role(*TESTER)
     async def lookup2(self, ctx, *, name):
         """Lookup contact info"""
         # Your code will go here
         member = ctx.author
         message = await member.send('Fetching Information, Please Wait')
 
-        scope = ['https://spreadsheets.google.com/feeds',
-                'https://www.googleapis.com/auth/drive']
-        file_path = bundled_data_path(self) / 'client_secret.json'
-        creds = ServiceAccountCredentials.from_json_keyfile_name(file_path, scope)
         client = gspread.authorize(creds)
         sheet = client.open("Draconian Fleet Contact Sheet").sheet1
 
@@ -117,6 +152,7 @@ class Mycog(commands.Cog):
             await message.edit('Name not found')
 
     @commands.command()
+    @commands.has_role(*TESTER)
     async def avatar(self, ctx):
         """Shows your Avatar"""
         idnum = ctx.author.id
@@ -128,6 +164,7 @@ class Mycog(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.has_role(*TESTER)
     async def cmd3(self, ctx):
         def check(m):
             return m.channel.id == ctx.channel.id and ctx.author.id == ctx.message.author.id
