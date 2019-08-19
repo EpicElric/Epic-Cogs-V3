@@ -1,0 +1,9 @@
+{
+    "author" : ["EpicElric"],
+    "bot_version": [3,0,0],
+    "install_msg" : "Thank you for installing PiratesNW",
+    "short" : "Displays info relevant to the Pirates of the Pacific NW",
+    "description" : "Displays info relevant to the Pirates of the Pacific NW",
+    "tags" : ["information"],
+    "hidden" : false
+  }
