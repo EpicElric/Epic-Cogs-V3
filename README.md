@@ -2,7 +2,7 @@
 
 [![Red](https://img.shields.io/badge/Red-DiscordBot-red.svg)](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop)
 
-V3 Cogs for Redbot
+V3 Cogs for Red Discord Bot
 
 # Installation
 To install:
