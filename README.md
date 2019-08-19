@@ -15,7 +15,7 @@ To install:
 
 > [p]load <cog_name>
 
-> [p]help <Cog_Name>
+> [p]help <cog_Name>
 
 # Credits
 
