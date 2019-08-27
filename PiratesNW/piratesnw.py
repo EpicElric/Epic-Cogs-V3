@@ -64,4 +64,3 @@ class PiratesNW(commands.Cog):
             await ctx.send(content= "Seadog Nights & Gypsy Carnival 2014 Event Map", file=discord.File(fh, filename="seadogmap14.jpg"))
         else:
             await ctx.send(content='Event Map not found')    
-        
